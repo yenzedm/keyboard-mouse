@@ -4,11 +4,11 @@ This script allows you to control the mouse using the keyboard. The script uses 
 
 ## Features
 
-- **Mouse Movement**: Use the `H`, `J`, `K`, `L` keys to move the mouse in different directions.
-- **Mouse Clicks**: Press `U` for left-click and `I` for right-click.
-- **Double Click**: Press `O` to perform a double-click.
-- **Mouse Button Hold**: Press `M` to hold the left mouse button, and `N` to release it.
-- **Scroll**: Press the **up** or **down** arrow keys to scroll the page.
+- **Mouse Movement**: Use the `h`, `j`, `k`, `l` moving the mouse like vim
+- **Mouse Clicks**: Press `u` for left-click and `i` for right-click.
+- **Double Click**: Press `o` to perform a double-click.
+- **Mouse Button Hold**: Press `m` to hold the left mouse button, and `n` to release it.
+- **Scroll**: Press the **↑** or **↓** arrow keys to scroll the page.
 - **Shift Key for Faster Movement**: Hold the `Shift` key for faster mouse movement and scrolling.
 - **Ctrl Key for Faster Scrolling**: Hold the `Ctrl` key for faster scrolling speed.
 - **Toggle Mouse Control Mode**: Use `Ctrl+F1` to enable or disable mouse control mode. When enabled, keyboard actions control the mouse; when disabled, the script will stop responding to the keyboard keys.
