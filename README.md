@@ -26,7 +26,7 @@ To install the required libraries, run:
 pip install pyautogui keyboard win10toast
 ```
 
-## Error
+## Errors
 
 WNDPROC return value cannot be converted to LRESULT  
 TypeError: WPARAM is simple, so must be an int object (got NoneType)
