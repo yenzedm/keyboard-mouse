@@ -1,11 +1,13 @@
 import pyautogui
 import keyboard
 import time
-import plyer
+from win10toast import ToastNotifier
 
 
-STEP_NORMAL = 10
-STEP_FAST = 150
+toast = ToastNotifier()
+
+STEP_NORMAL = 5
+STEP_FAST = 110
 SCROLL_NORMAL = 400
 SCROLL_FAST = 950
 DELAY = 0.02
@@ -76,20 +78,10 @@ def toggle_mode():
         mouse_control_enabled = not mouse_control_enabled
         if mouse_control_enabled:
             block_keys()
-            plyer.notification.notify(
-                message='ON',
-                app_name='Keyboard mouse',
-                app_icon='km.ico',
-                title='Keyboard mouse',
-            )
+            toast.show_toast(title='Keyboard mouse', msg='ON', duration=2)
         else:
             unblock_keys()
-            plyer.notification.notify(
-                message='OFF',
-                app_name='Keyboard mouse',
-                app_icon='km.ico',
-                title='Keyboard mouse',
-            )
+            toast.show_toast(title='Keyboard mouse', msg='ON', duration=2)
 
         print(f"[INFO] Mouse control mode: {'ON' if mouse_control_enabled else 'OFF'}")
     
