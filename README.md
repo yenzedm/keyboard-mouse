@@ -8,7 +8,7 @@ This script allows you to control the mouse using the keyboard. The script uses 
 - **Mouse Clicks**: Press `u` for left-click and `i` for right-click.
 - **Double Click**: Press `o` to perform a double-click.
 - **Mouse Button Hold**: Press `m` to hold the left mouse button, and `n` to release it.
-- **Scroll**: Press the **↑ ↓** to scroll the page vertically and press the **← →** to scroll horizontally.
+- **Scroll**: Press the **↑↓** to scroll the page vertically and press the **←→** to scroll horizontally.
 - **Shift Key for Faster Movement**: Hold the `Shift` key for faster mouse movement and scrolling.
 - **Ctrl Key for Faster Scrolling**: Hold the `Ctrl` key for faster scrolling speed.
 - **Toggle Mouse Control Mode**: Use `Ctrl+F1` to enable or disable mouse control mode. When enabled, keyboard actions control the mouse; when disabled, the script will stop responding to the keyboard keys.
