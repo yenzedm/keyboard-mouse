@@ -2,11 +2,12 @@ import pyautogui
 import keyboard
 import time
 from win10toast import ToastNotifier
+import ctypes
 
 
 toast = ToastNotifier()
 
-STEP_NORMAL = 5
+STEP_NORMAL = 8
 STEP_FAST = 110
 SCROLL_NORMAL = 400
 SCROLL_FAST = 950
@@ -15,7 +16,12 @@ DELAY = 0.02
 pyautogui.FAILSAFE = False  # Disabling the emergency exit
 
 mouse_control_enabled = False
-blocked_keys = ['h', 'j', 'k', 'l', 'u', 'i', 'o', 'm', 'n', 'up', 'down']
+blocked_keys = ['h', 'j', 'k', 'l', 'u', 'i', 'o', 'm', 'n', 'up', 'down', 'left', 'right']
+
+def horizontal_scroll(amount):
+    # amount > 0 — right, amount < 0 — left
+    ctypes.windll.user32.mouse_event(0x0800, 0, 0, amount, 0)  # 0x0800 = MOUSEEVENTF_HWHEEL
+
 
 def block_keys():
     for key in blocked_keys:
@@ -63,6 +69,12 @@ def move_mouse():
             elif keyboard.is_pressed('down'):
                 pyautogui.scroll(-scroll)
                 time.sleep(0.1)
+            elif keyboard.is_pressed('right'):
+                horizontal_scroll(-scroll)
+                time.sleep(0.1)
+            elif keyboard.is_pressed('left'):
+                horizontal_scroll(scroll)
+                time.sleep(0.1)
 
             time.sleep(DELAY)
         else:
@@ -81,7 +93,7 @@ def toggle_mode():
             toast.show_toast(title='Keyboard mouse', msg='ON', duration=2)
         else:
             unblock_keys()
-            toast.show_toast(title='Keyboard mouse', msg='ON', duration=2)
+            toast.show_toast(title='Keyboard mouse', msg='OFF', duration=2)
 
         print(f"[INFO] Mouse control mode: {'ON' if mouse_control_enabled else 'OFF'}")
     
