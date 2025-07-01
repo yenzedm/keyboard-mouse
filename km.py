@@ -30,7 +30,7 @@ DELAY = 0.02
 pyautogui.FAILSAFE = False  # Disabling the emergency exit
 
 mouse_control_enabled = False
-blocked_keys = ['h', 'j', 'k', 'l', 'u', 'i', 'm', 'n', 'up', 'down', 'left', 'right']
+blocked_keys = ['h', 'j', 'k', 'l', 'u', 'i', 'm', ',', 'up', 'down', 'left', 'right']
 
 def horizontal_scroll(amount):
     # amount > 0 — right, amount < 0 — left
@@ -70,7 +70,7 @@ def move_mouse():
             elif keyboard.is_pressed('m'):
                 pyautogui.mouseDown(button='left')
                 time.sleep(0.2)
-            elif keyboard.is_pressed('n'):
+            elif keyboard.is_pressed(','):
                 pyautogui.mouseUp(button='left')
                 time.sleep(0.2)
             
