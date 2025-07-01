@@ -3,7 +3,23 @@ import keyboard
 import time
 from win10toast import ToastNotifier
 import ctypes
+import sys
+from pathlib import Path
 
+
+def resource_path(relative_path):
+    """ Получает правильный путь к ресурсу после сборки PyInstaller """
+    if hasattr(sys, '_MEIPASS'):
+        # Если программа запущена из .exe
+        base_path = Path(sys._MEIPASS)
+    else:
+        # Если запущена как скрипт Python
+        base_path = Path(__file__).parent
+    return str(base_path / relative_path)
+
+# Пример использования:
+icon_path = resource_path("km.ico")
+print(icon_path)
 
 toast = ToastNotifier()
 
@@ -16,7 +32,7 @@ DELAY = 0.02
 pyautogui.FAILSAFE = False  # Disabling the emergency exit
 
 mouse_control_enabled = False
-blocked_keys = ['h', 'j', 'k', 'l', 'u', 'i', 'o', 'm', 'n', 'up', 'down', 'left', 'right']
+blocked_keys = ['h', 'j', 'k', 'l', 'u', 'i', 'm', 'n', 'up', 'down', 'left', 'right']
 
 def horizontal_scroll(amount):
     # amount > 0 — right, amount < 0 — left
@@ -53,9 +69,6 @@ def move_mouse():
             elif keyboard.is_pressed('i'):
                 pyautogui.click(button='right')
                 time.sleep(0.2)
-            elif keyboard.is_pressed('o'):
-                pyautogui.doubleClick()
-                time.sleep(0.3)
             elif keyboard.is_pressed('m'):
                 pyautogui.mouseDown(button='left')
                 time.sleep(0.2)
@@ -90,10 +103,10 @@ def toggle_mode():
         mouse_control_enabled = not mouse_control_enabled
         if mouse_control_enabled:
             block_keys()
-            toast.show_toast(title='Keyboard mouse', msg='ON', icon_path='km.ico', duration=2)
+            toast.show_toast(title='Keyboard mouse', msg='ON', icon_path=icon_path, duration=2)
         else:
             unblock_keys()
-            toast.show_toast(title='Keyboard mouse', msg='OFF', icon_path='km.ico', duration=2)
+            toast.show_toast(title='Keyboard mouse', msg='OFF', icon_path=icon_path, duration=2)
 
         print(f"[INFO] Mouse control mode: {'ON' if mouse_control_enabled else 'OFF'}")
     
