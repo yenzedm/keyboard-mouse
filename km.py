@@ -8,18 +8,16 @@ from pathlib import Path
 
 
 def resource_path(relative_path):
-    """ Получает правильный путь к ресурсу после сборки PyInstaller """
+    """ Gets the correct resource path after building PyInstaller """
     if hasattr(sys, '_MEIPASS'):
-        # Если программа запущена из .exe
+        # If the program is launched from .exe
         base_path = Path(sys._MEIPASS)
     else:
-        # Если запущена как скрипт Python
+        # If run as a Python script
         base_path = Path(__file__).parent
     return str(base_path / relative_path)
 
-# Пример использования:
 icon_path = resource_path("km.ico")
-print(icon_path)
 
 toast = ToastNotifier()
 

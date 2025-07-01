@@ -6,7 +6,7 @@ This script allows you to control the mouse using the keyboard. The script uses 
 
 - **Mouse Movement**: Use the `h`, `j`, `k`, `l` moving the mouse like vim
 - **Mouse Clicks**: Press `u` for left-click and `i` for right-click.
-- **Double Click**: Press `o` to perform a double-click.
+- **Double Click**: Press `u` twice to perform a double-click.
 - **Mouse Button Hold**: Press `m` to hold the left mouse button, and `n` to release it.
 - **Scroll**: Press the **↑↓** to scroll the page vertically and press the **←→** to scroll horizontally.
 - **Shift Key for Faster Movement**: Hold the `Shift` key for faster mouse movement and scrolling.
@@ -47,4 +47,8 @@ This is because of the following function in win10toast/\_\_init\_\_.py. Solutio
         PostQuitMessage(0)
 
         return None ##<< Error causing line. Replace return None with return 0
+```
+windows cmd:  
+```cmd
+python -m venv venv && .\venv\Scripts\activate && pip install pyautogui keyboard win10toast pyinstaller && pyinstaller --onefile -n km --add-data "km.ico;." km.py && deactivate && rd /s /q venv
 ```
