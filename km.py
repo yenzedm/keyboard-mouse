@@ -90,10 +90,10 @@ def toggle_mode():
         mouse_control_enabled = not mouse_control_enabled
         if mouse_control_enabled:
             block_keys()
-            toast.show_toast(title='Keyboard mouse', msg='ON', duration=2)
+            toast.show_toast(title='Keyboard mouse', msg='ON', icon_path='km.ico', duration=2)
         else:
             unblock_keys()
-            toast.show_toast(title='Keyboard mouse', msg='OFF', duration=2)
+            toast.show_toast(title='Keyboard mouse', msg='OFF', icon_path='km.ico', duration=2)
 
         print(f"[INFO] Mouse control mode: {'ON' if mouse_control_enabled else 'OFF'}")
     
