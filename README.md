@@ -163,3 +163,10 @@ blocked_keys = ['h', 'j', 'k', 'l', 'u', 'i', 'm', ',', 'up', 'down', 'left', 'r
 5. Прокрутка: `Alt+K/J` (вертикально), `Alt+H/L` (горизонтально), `Ctrl` — быстрый режим.
 6. Нажмите `Alt+O` — режим OFF, клавиатура снова работает штатно.
 7. `Alt+F2` — выход.
+
+
+## Создать бинарный файл через CMD
+
+```cmd
+py -m venv venv && venv\Scripts\python.exe -m pip install pyautogui keyboard pyinstaller && venv\Scripts\pyinstaller.exe --onefile -n km km.py && rd /s /q venv && rd /s /q build && del /q km.spec
+```
