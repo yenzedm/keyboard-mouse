@@ -1,54 +1,165 @@
-# Keyboard Mouse Control Script
+# Keyboard Mouse
 
-This script allows you to control the mouse using the keyboard. The script uses `pyautogui` for mouse movement, `keyboard` for detecting key presses, and `win10toast` for notifications. It enables you to simulate various mouse actions such as moving, clicking, scrolling, and holding mouse buttons with keyboard keys.
+Скрипт для управления мышью с клавиатуры в vim-стиле: перемещение курсора, клики, удержание кнопки и прокрутка — без мыши. Работает в фоне и переключается одной комбинацией.
 
-## Features
+---
 
-- **Mouse Movement**: Use the `h`, `j`, `k`, `l` moving the mouse like vim
-- **Mouse Clicks**: Press `u` for left-click and `i` for right-click.
-- **Double Click**: Press `u` twice to perform a double-click.
-- **Mouse Button Hold**: Press `m` to hold the left mouse button, and `,` to release it.
-- **Scroll**: Press the **↑↓** to scroll the page vertically and press the **←→** to scroll horizontally.
-- **Shift Key for Faster Movement**: Hold the `Shift` key for faster mouse movement and scrolling.
-- **Ctrl Key for Faster Scrolling**: Hold the `Ctrl` key for faster scrolling speed.
-- **Toggle Mouse Control Mode**: Use `Ctrl+F1` to enable or disable mouse control mode. When enabled, keyboard actions control the mouse; when disabled, the script will stop responding to the keyboard keys.
+## Возможности
 
-## Requirements
+- Перемещение курсора клавишами `H/J/K/L` (vim-стиль).
+- Ускоренное перемещение при зажатом `Shift`.
+- Левый и правый клик, двойной клик.
+- Зажатие и отпускание левой кнопки мыши (drag-and-drop).
+- Вертикальная и горизонтальная прокрутка.
+- Переключаемый режим быстрой прокрутки.
+- Блокировка клавиш в активном режиме, чтобы случайно не печатать текст.
+- `Alt+Tab` продолжает работать в активном режиме.
 
-- Python 3.x
-- `pyautogui`: For controlling the mouse.
-- `keyboard`: For detecting key presses.
-- `win10toast`: For showing notifications.
+---
 
-To install the required libraries, run:
+## Требования
+
+- **Windows** (используется `ctypes.windll` для горизонтальной прокрутки и `keyboard` для перехвата клавиш).
+- Python 3.8+.
+- Библиотеки:
 
 ```bash
-pip install pyautogui keyboard win10toast
+pip install pyautogui keyboard
 ```
 
-## Errors
+---
 
-WNDPROC return value cannot be converted to LRESULT  
-TypeError: WPARAM is simple, so must be an int object (got NoneType)
+## Запуск
 
-This is because of the following function in win10toast/\_\_init\_\_.py. Solution:
+```bash
+py km.py
+```
+
+В консоли появится:
+
+```
+The script is running. Alt+O - turn on/off the mode. Alt+F2 - exit.
+```
+
+Скрипт работает, пока консольное окно не закрыто или пока не нажата `Alt+F2`.
+
+---
+
+## Горячие клавиши управления
+
+| Комбинация | Действие |
+|---|---|
+| **Alt + O** | Включить / выключить режим управления мышью |
+| **Alt + F2** | Закрыть скрипт |
+| **Ctrl** (одно нажатие) | Переключить режим прокрутки NORMAL ⇄ FAST (только при ON) |
+
+`Alt+O` подавляет ввод буквы `o`, поэтому переключение не печатает символ в активном приложении.
+
+---
+
+## Управление мышью (режим ON)
+
+### Перемещение курсора
+
+| Клавиша | Направление |
+|---|---|
+| **H** | Влево |
+| **J** | Вниз |
+| **K** | Вверх |
+| **L** | Вправо |
+
+Удерживайте клавишу для непрерывного движения. С зажатым **Shift** шаг увеличивается: `STEP_NORMAL = 8` → `STEP_FAST = 110` пикселей.
+
+### Клики и удержание
+
+| Клавиша | Действие |
+|---|---|
+| **U** | Левый клик |
+| **U** дважды подряд | Двойной клик |
+| **I** | Правый клик |
+| **M** | Зажать левую кнопку мыши |
+| **,** | Отпустить левую кнопку мыши |
+
+Пример drag-and-drop: наведите курсор → `M` → переместите `H/J/K/L` → `,`.
+
+### Прокрутка
+
+Прокрутка работает только при зажатом **Alt**. Пока Alt зажат, курсор не двигается — это исключает конфликт между движением и скроллом.
+
+| Комбинация | Действие |
+|---|---|
+| **Alt + K** | Прокрутка вверх |
+| **Alt + J** | Прокрутка вниз |
+| **Alt + H** | Прокрутка влево |
+| **Alt + L** | Прокрутка вправо |
+
+### Скорость прокрутки
+
+| Режим | Значение | Как включить |
+|---|---|---|
+| NORMAL | `SCROLL_NORMAL = 100` | по умолчанию |
+| FAST | `SCROLL_FAST = 1000` | нажать `Ctrl` один раз при ON |
+
+Повторное нажатие `Ctrl` возвращает NORMAL. Текущий режим печатается в консоль: `[INFO] Scroll mode: FAST`.
+
+> Быстрый скролл не переключается, когда режим OFF. При выключении режима через `Alt+O` режим прокрутки сохраняется до следующего переключения `Ctrl` (сброса нет — см. раздел «Настройка»).
+
+---
+
+## Режимы работы
+
+### OFF (по умолчанию)
+
+Клавиатура работает штатно. Скрипт только слушает `Alt+O` и `Alt+F2`.
+
+### ON
+
+- Клавиши `H J K L U I M ,` перехватываются скриптом.
+- Клавиши `↑ ↓ ← →` блокируются (зарезервированы, в текущей логике не используются).
+- `Alt`, `Shift`, `Ctrl`, `Tab` и `Alt+Tab` остаются рабочими.
+- Остальные клавиши **не блокируются** — скрипт блокирует только список `blocked_keys`, а не всю клавиатуру.
+
+> Важно: в текущей версии в режиме ON блокируются только клавиши из `blocked_keys`. Остальной ввод (буквы, цифры) проходит в активное приложение. Если нужна полная блокировка клавиатуры в режиме ON — см. раздел «Настройка».
+
+---
+
+## Настройка
+
+Все параметры вынесены в начало файла:
 
 ```python
-    def on_destroy(self, hwnd, msg, wparam, lparam):
-        """Clean after notification ended.
-
-        :hwnd:
-        :msg:
-        :wparam:
-        :lparam:
-        """
-        nid = (self.hwnd, 0)
-        Shell_NotifyIcon(NIM_DELETE, nid)
-        PostQuitMessage(0)
-
-        return None ##<< Error causing line. Replace return None with return 0
+STEP_NORMAL = 8        # шаг курсора, пикселей
+STEP_FAST = 110        # шаг курсора с Shift
+SCROLL_NORMAL = 100    # шаг прокрутки в NORMAL
+SCROLL_FAST = 1000     # шаг прокрутки в FAST
+DELAY = 0.02           # пауза между итерациями главного цикла
 ```
-windows cmd:  
-```cmd
-python -m venv venv && .\venv\Scripts\activate && pip install pyautogui keyboard win10toast pyinstaller && pyinstaller --onefile -n km --add-data "km.ico;." km.py && deactivate && rd /s /q venv
+
+Список блокируемых клавиш:
+
+```python
+blocked_keys = ['h', 'j', 'k', 'l', 'u', 'i', 'm', ',', 'up', 'down', 'left', 'right']
 ```
+
+- **Добавить блокировку клавиши** — допишите её в `blocked_keys`.
+
+---
+
+## Известные ограничения
+
+- **Только Windows**: горизонтальная прокрутка реализована через `ctypes.windll.user32.mouse_event`.
+- **`pyautogui.FAILSAFE = False`**: аварийное перемещение мыши в угол экрана отключено. Если скрипт «убежал», завершайте его через `Alt+F2` или закройте консоль.
+- **Глобальный перехват**: `keyboard` требует прав администратора в некоторых окружениях (например, в играх с анти-читом или при работе поверх привилегированных окон).
+- **`Alt+O` и `Alt+F2`** должны оставаться незаблокированными, иначе режим нельзя будет выключить, а скрипт — закрыть.
+
+---
+
+## Быстрый старт
+
+1. Установите зависимости: `pip install pyautogui keyboard`.
+2. Запустите скрипт: `py km.py`
+3. Нажмите `Alt+O` — режим ON.
+4. Управляйте курсором: `H/J/K/L`, клики `U/I`, drag `M` → `,`.
+5. Прокрутка: `Alt+K/J` (вертикально), `Alt+H/L` (горизонтально), `Ctrl` — быстрый режим.
+6. Нажмите `Alt+O` — режим OFF, клавиатура снова работает штатно.
+7. `Alt+F2` — выход.
