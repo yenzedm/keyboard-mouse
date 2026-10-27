@@ -168,5 +168,5 @@ blocked_keys = ['h', 'j', 'k', 'l', 'u', 'i', 'm', ',', 'up', 'down', 'left', 'r
 ## Создать бинарный файл через CMD
 
 ```cmd
-py -m venv venv && venv\Scripts\python.exe -m pip install pyautogui keyboard pyinstaller && venv\Scripts\pyinstaller.exe --onefile -n km km.py && rd /s /q venv && rd /s /q build && del /q km.spec
+py -m venv venv && venv\Scripts\python.exe -m pip install pyautogui keyboard pyinstaller && venv\Scripts\pyinstaller.exe --onefile -i km.ico -n km km.py && rd /s /q venv && rd /s /q build && del /q km.spec
 ```

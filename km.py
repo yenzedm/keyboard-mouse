@@ -31,7 +31,7 @@ fast_scroll_enabled = False
 
 def horizontal_scroll(amount):
     # amount > 0 — right, amount < 0 — left
-    ctypes.windll.user32.mouse_event(0x01000, 0, 0, amount, 0)  # 0x01000 = MOUSEEVENTF_HWHEEL
+    ctypes.windll.user32.mouse_event(0x01000, 0, 0, amount, 0)  # 0x0800 = MOUSEEVENTF_HWHEEL
 
 
 def block_keys():
