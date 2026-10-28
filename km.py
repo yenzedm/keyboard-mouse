@@ -2,6 +2,7 @@ import pyautogui
 import keyboard
 import time
 import ctypes
+import threading
 
 
 STEP_NORMAL = 8
@@ -27,6 +28,10 @@ blocked_keys = [
 
 mouse_control_enabled = False
 fast_scroll_enabled = False
+
+# --- НОВОЕ: защита от повторного срабатывания y/p при удержании ---
+_cp_lock = threading.Lock()
+_cp_busy = False
 
 
 def horizontal_scroll(amount):
@@ -127,6 +132,53 @@ def _o_hook_fn(event):
     return not mouse_control_enabled
 
 
+# --- НОВОЕ: копирование и вставка ---
+
+def _do_copy():
+    global _cp_busy
+    try:
+        keyboard.unblock_key('c')
+        keyboard.send('ctrl+c')
+        time.sleep(0.1)  # даём событию дойти до активного окна
+    finally:
+        keyboard.block_key('c')
+        with _cp_lock:
+            _cp_busy = False
+
+
+def _do_paste():
+    global _cp_busy
+    try:
+        keyboard.unblock_key('v')
+        keyboard.send('ctrl+v')
+        time.sleep(0.1)
+    finally:
+        keyboard.block_key('v')
+        with _cp_lock:
+            _cp_busy = False
+
+
+def _copy_paste_hook(event):
+    global _cp_busy
+    if not mouse_control_enabled:
+        return True
+
+    name = (event.name or '').lower()
+    if event.event_type != keyboard.KEY_DOWN:
+        return True
+    if name not in ('y', 'p'):
+        return True
+
+    with _cp_lock:
+        if _cp_busy:
+            return False  # игнорируем автоповтор, пока идёт операция
+        _cp_busy = True
+
+    target = _do_copy if name == 'y' else _do_paste
+    threading.Thread(target=target, daemon=True).start()
+    return False
+
+
 def toggle_fast_scroll():
     def switch():
         global fast_scroll_enabled
@@ -137,8 +189,10 @@ def toggle_fast_scroll():
         print(f"[INFO] Scroll mode: {mode}")
 
     keyboard.add_hotkey('ctrl', switch, suppress=False)
-    
+
+
 if __name__ == "__main__":
     keyboard.hook(_o_hook_fn, suppress=True)
+    keyboard.hook(_copy_paste_hook, suppress=True)   # НОВОЕ
     toggle_fast_scroll()
     move_mouse()
